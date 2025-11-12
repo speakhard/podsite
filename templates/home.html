@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="hero-left">
+    {% if site.image %}<img src="{{ site.image }}" alt="{{ site.title }}" class="hero-art">{% endif %}
+  </div>
+  <div class="hero-right">
+    <h1>{{ site.hero_title or site.title }}</h1>
+    <p class="tagline">{{ site.hero_blurb or site.tagline }}</p>
+    <div class="subscribe-buttons">
+      {% for name, url in show.get("subscribe", {}).items() %}
+      <a href="{{ url }}" class="btn-subscribe">{{ name|capitalize }}</a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="episodes">
+  <h2>Recent Episodes</h2>
+  <div class="episode-grid">
+    {% for ep in episodes %}
+    <article class="episode-card">
+      <h3><a href="/episodes/{{ ep.slug }}/">{{ ep.title }}</a></h3>
+      <p class="date">{{ ep.published | date("%b %d, %Y") }}</p>
+      <p class="summary">{{ ep.summary }}</p>
+      <a class="listen" href="/episodes/{{ ep.slug }}/">▶ Listen to Episode</a>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

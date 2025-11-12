@@ -1,0 +1,40 @@
+shows:
+  # ---- podsite-template (copy this block for new shows)
+  - title: "PODSITE TEMPLATE"
+    slug: "podsite-template"
+    feed: "https://example.com/feed.xml"
+    domain: ""  # optional custom domain
+    theme:
+      accent:  "#4b6bfb"
+      bg:      "#0d1117"
+      panel:   "#1f2937"
+      header_bg: "#111827"
+      text:    "#f4f4f4"
+      muted:   "#9ca3af"
+      hero_title: "Your Podcast Name"
+      hero_blurb: "A crisp one-liner lives here."
+      layout: "cards"   # future: 'list'
+    subscribe:
+      apple: "#"
+      spotify: "#"
+      rss: "#"
+
+  # ---- podsite-lbh (your real site)
+  - title: "LAST BEST HOPE: An Explicitly Political Babylon 5 Podcast"
+    slug: "last-best-hope"
+    feed: "https://pinecast.com/feed/last-best-hope"
+    domain: "lastbesthopeb5.com"
+    theme:
+      accent: "#4b6bfb"
+      bg: "#0b1220"
+      panel: "#121a2b"
+      header_bg: "#0c1426"
+      text: "#e6ebf5"
+      muted: "#93a4c4"
+      hero_title: "LAST BEST HOPE: An Explicitly Political Babylon 5 Podcast"
+      hero_blurb: "Fascism isn’t science fiction."
+      layout: "cards"
+    subscribe:
+      apple: "https://podcasts.apple.com/"
+      spotify: "https://open.spotify.com/"
+      rss: "https://pinecast.com/feed/last-best-hope"

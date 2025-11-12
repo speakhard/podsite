@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<article class="episode">
+  <h1>{{ ep.title }}</h1>
+  <div class="muted">{{ ep.published | date("%b %d, %Y") }}</div>
+  {% if ep.audio %}<p><audio controls src="{{ ep.audio }}" style="width:100%"></audio></p>{% endif %}
+  <div class="content">{{ ep.content | safe }}</div>
+  {% if ep.transcript_url %}<p><a href="{{ ep.transcript_url }}" target="_blank">Transcript</a></p>{% endif %}
+</article>
+{% endblock %}
