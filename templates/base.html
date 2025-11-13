@@ -11,11 +11,14 @@
 <header class="site-header">
   <div class="container header-inner">
     <div class="logo-wrap">
-      {% if site.image %}<img src="{{ site.image }}" class="logo" alt="{{ site.title }}">{% endif %}
+      {% if site.image %}
+        <img src="{{ site.image }}" class="logo" alt="{{ site.title }}">
+      {% endif %}
       <a class="brand" href="/">{{ site.title }}</a>
     </div>
     <nav class="nav">
       <a href="/">Home</a>
+      <a href="/#episodes">Episodes</a>
       <a href="/about/">About</a>
       <a href="/reviews/">Reviews</a>
       <a href="/blog/">Blog</a>

@@ -1,4 +1,14 @@
-import os, sys, time, shutil, yaml, feedparser, datetime, glob, json, re
+import os
+import time
+import shutil
+import yaml
+import feedparser
+import datetime
+import glob
+import json
+import re
+from datetime import datetime, timezone
+
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from utils import ensure_dir, to_slug, md_to_html, download_image
 
@@ -13,46 +23,113 @@ env = Environment(
     trim_blocks=True,
     lstrip_blocks=True,
 )
-env.globals["now"] = lambda: datetime.datetime.utcnow()
-env.filters["date"] = lambda dt, fmt="%b %d, %Y": datetime.datetime.fromtimestamp(dt).strftime(fmt) if isinstance(dt, (int, float)) else str(dt)
+env.globals["now"] = lambda: datetime.now(timezone.utc)
+env.filters["date"] = (
+    lambda dt, fmt="%b %d, %Y": datetime.datetime.fromtimestamp(dt).strftime(fmt)
+    if isinstance(dt, (int, float))
+    else str(dt)
+)
 
-def render(tpl, ctx, out_path):
+
+def render(template, context, out_path):
+    html = env.get_template(template).render(**context)
     ensure_dir(os.path.dirname(out_path))
-    html = env.get_template(tpl).render(**ctx)
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)
 
-def copy_static(dest): shutil.copytree(STATIC_DIR, os.path.join(dest, "static"), dirs_exist_ok=True)
 
-def load_posts(slug):
-    root = os.path.join(BASE_DIR, "content", "posts", slug)
+def copy_static(dest):
+    shutil.copytree(STATIC_DIR, os.path.join(dest, "static"), dirs_exist_ok=True)
+
+
+def load_posts(slug: str):
+    posts_root = os.path.join(BASE_DIR, "content", "posts", slug)
     items = []
-    if os.path.isdir(root):
-        for p in sorted(glob.glob(os.path.join(root, "*.md")), reverse=True):
-            with open(p, "r", encoding="utf-8") as f: raw = f.read()
+    if os.path.isdir(posts_root):
+        for p in sorted(glob.glob(os.path.join(posts_root, "*.md")), reverse=True):
+            with open(p, "r", encoding="utf-8") as f:
+                raw = f.read()
+
+            title = os.path.splitext(os.path.basename(p))[0].replace("-", " ").title()
+            date_display = ""
+
             m = re.match(r"^---\n(.*?)\n---\n(.*)$", raw, flags=re.S)
-            body, title, date_display = raw, os.path.splitext(os.path.basename(p))[0].replace("-"," ").title(), ""
+            body = raw
             if m:
                 fm, body = m.groups()
                 for line in fm.splitlines():
                     if ":" in line:
-                        k,v = [x.strip() for x in line.split(":",1)]
-                        if k.lower()=="title": title=v
-                        if k.lower()=="date":  date_display=v
-            items.append({
-                "slug": to_slug(os.path.splitext(os.path.basename(p))[0]),
-                "title": title, "date_display": date_display, "html": md_to_html(body)
-            })
+                        k, v = line.split(":", 1)
+                        k = k.strip().lower()
+                        v = v.strip()
+                        if k == "title":
+                            title = v
+                        if k == "date":
+                            date_display = v
+
+            html = md_to_html(body)
+            items.append(
+                {
+                    "slug": to_slug(os.path.splitext(os.path.basename(p))[0]),
+                    "title": title,
+                    "html": html,
+                    "date_display": date_display,
+                }
+            )
     return items
+
+
+def load_episode_extra(show_slug: str, ep_slug: str):
+    """
+    Optional per-episode overrides:
+    content/episodes/<show-slug>/<episode-slug>.md
+
+    Supports YAML frontmatter:
+    ---
+    guests:
+      - name: "Jane Doe"
+        url: "https://janedoe.com"
+    comments:
+      - "Recorded right after the election."
+    ---
+
+    <markdown body for notes/transcript>
+    """
+    path = os.path.join(
+        BASE_DIR, "content", "episodes", show_slug, f"{ep_slug}.md"
+    )
+    if not os.path.exists(path):
+        return {}
+
+    with open(path, "r", encoding="utf-8") as f:
+        raw = f.read()
+
+    m = re.match(r"^---\n(.*?)\n---\n(.*)$", raw, flags=re.S)
+    front, body = {}, raw
+    if m:
+        fm, body = m.groups()
+        front = yaml.safe_load(fm) or {}
+
+    html_body = md_to_html(body)
+
+    return {
+        "guests": front.get("guests", []),
+        "comments": front.get("comments", []),
+        "extra_html": html_body,
+    }
+
 
 def build_show(show, out_root):
     print(f"==> Building {show.get('title')}")
     fp = feedparser.parse(show["feed"])
 
-    theme = show.get("theme", {})
+    theme = show.get("theme", {}) or {}
+
     site = {
-        "title": show.get("title") or fp.feed.get("title","Podcast"),
-        "tagline": show.get("description") or fp.feed.get("subtitle") or fp.feed.get("description",""),
+        "title": show.get("title") or fp.feed.get("title", "Podcast"),
+        "tagline": show.get("description")
+        or fp.feed.get("subtitle")
+        or fp.feed.get("description", ""),
         "image": "",
         "analytics_head": "",
         # theming
@@ -62,80 +139,171 @@ def build_show(show, out_root):
         "header_bg": theme.get("header_bg", "#111827"),
         "text": theme.get("text", "#f4f4f4"),
         "muted": theme.get("muted", "#9ca3af"),
-        "hero_title": theme.get("hero_title",""),
-        "hero_blurb": theme.get("hero_blurb",""),
-        "layout": theme.get("layout","cards"),
+        "hero_title": theme.get("hero_title", ""),
+        "hero_blurb": theme.get("hero_blurb", ""),
+        "layout": theme.get("layout", "cards"),
     }
 
-    # artwork
-    img_url = show.get("image")
-    if not img_url and hasattr(fp.feed, "image") and isinstance(fp.feed.image, dict):
-        img_url = fp.feed.image.get("href","")
+    # Show artwork (site-wide)
+    img_url = ""
+    if hasattr(fp.feed, "image"):
+        img = getattr(fp.feed, "image")
+        if isinstance(img, dict):
+            img_url = img.get("href", "") or ""
+    img_url = show.get("image") or img_url
+
+    images_dir = os.path.join(out_root, "images")
     if img_url:
-        saved = download_image(img_url, os.path.join(out_root,"images"))
+        saved = download_image(img_url, images_dir)
         site["image"] = f"/images/{saved}" if saved else ""
 
-    # analytics
-    analytics = show.get("analytics",{}) or {}
+    # Analytics
+    analytics = show.get("analytics", {}) or {}
     if analytics.get("plausible_domain"):
         dom = analytics["plausible_domain"]
-        site["analytics_head"] += f'<script defer data-domain="{dom}" src="https://plausible.io/js/script.js"></script>\n'
-    site["analytics_head"] += analytics.get("custom_head_html","")
+        site["analytics_head"] += (
+            f'<script defer data-domain="{dom}" '
+            f'src="https://plausible.io/js/script.js"></script>\n'
+        )
+    site["analytics_head"] += analytics.get("custom_head_html", "")
 
-    # CNAME
+    # CNAME for custom domains
     if show.get("domain"):
         ensure_dir(out_root)
-        with open(os.path.join(out_root, "CNAME"), "w") as f: f.write(show["domain"].strip())
+        with open(os.path.join(out_root, "CNAME"), "w") as f:
+            f.write(show["domain"].strip())
 
-    # episodes
-    episodes=[]
+    # Episodes
+    episodes = []
     for e in fp.entries:
-        published = None
-        if getattr(e, "published_parsed", None): published = time.mktime(e.published_parsed)
-        elif getattr(e, "updated_parsed", None): published = time.mktime(e.updated_parsed)
-        else: published = time.time()
+        # Published date
+        if getattr(e, "published_parsed", None):
+            published = time.mktime(e.published_parsed)
+        elif getattr(e, "updated_parsed", None):
+            published = time.mktime(e.updated_parsed)
+        else:
+            published = time.time()
 
-        audio=""
-        if getattr(e, "enclosures", None): audio = e.enclosures[0].get("url","")
+        # Audio URL
+        audio_url = ""
+        if getattr(e, "enclosures", None):
+            audio_url = e.enclosures[0].get("url", "")
         elif getattr(e, "links", None):
             for L in e.links:
-                if L.get("type","").startswith("audio"):
-                    audio=L.get("href",""); break
+                if L.get("type", "").startswith("audio"):
+                    audio_url = L.get("href", "")
+                    break
 
-        episodes.append({
+        # Subtitle vs full content
+        subtitle = (
+            getattr(e, "itunes_subtitle", None)
+            or getattr(e, "itunes_summary", None)
+            or e.get("summary", "")
+        )
+
+        full_content = (
+            getattr(e, "content", [{}])[0].get("value", "")
+            if hasattr(e, "content")
+            else e.get("summary", "")
+        )
+
+        # Episode artwork via itunes:image or image; fallback to show art
+        ep_image_url = ""
+        ep_image_path = ""
+
+        # itunes:image
+        if hasattr(e, "itunes_image"):
+            img = getattr(e, "itunes_image")
+            if isinstance(img, dict):
+                ep_image_url = img.get("href", "") or ""
+            else:
+                ep_image_url = str(img)
+
+        # generic image
+        if not ep_image_url and hasattr(e, "image"):
+            img = getattr(e, "image")
+            if isinstance(img, dict):
+                ep_image_url = img.get("href", "") or ""
+            else:
+                ep_image_url = str(img)
+
+        # download episode art if available
+        if ep_image_url:
+            saved_ep = download_image(ep_image_url, images_dir)
+            if saved_ep:
+                ep_image_path = f"/images/{saved_ep}"
+
+        # fallback: show art
+        if not ep_image_path:
+            ep_image_path = site.get("image", "")
+
+        ep = {
             "id": e.get("id") or e.get("guid") or e.get("link") or str(published),
-            "title": e.get("title","Untitled Episode"),
+            "title": e.get("title", "Untitled Episode"),
             "slug": to_slug(e.get("title") or str(published)),
-            "link": e.get("link",""),
+            "link": e.get("link", ""),
             "published": published,
-            "summary": e.get("summary",""),
-            "content": (getattr(e,"content",[{}])[0].get("value","") if hasattr(e,"content") else e.get("summary","")),
-            "audio": audio,
-            "transcript_url": getattr(e, "podcast_transcript", None) or ""
-        })
+            # what tiles show
+            "subtitle": subtitle,
+            "summary": subtitle,
+            # what the episode page shows
+            "content": full_content,
+            "audio": audio_url,
+            "image": ep_image_path,
+            "transcript_url": getattr(e, "podcast_transcript", None) or "",
+        }
+        episodes.append(ep)
+
     episodes.sort(key=lambda x: x["published"], reverse=True)
 
-    posts = load_posts(show.get("slug") or to_slug(site["title"]))
+    # Per-episode extras from local markdown
+    show_slug = show.get("slug") or to_slug(site["title"])
+    for ep in episodes:
+        extra = load_episode_extra(show_slug, ep["slug"])
+        ep["guests"] = extra.get("guests", [])
+        ep["comments"] = extra.get("comments", [])
+        ep["extra_html"] = extra.get("extra_html", "")
 
-    ctx = {"site":site, "show":show, "episodes":episodes, "posts":posts}
+    posts = load_posts(show_slug)
+
+    context = {
+        "site": site,
+        "show": show,
+        "episodes": episodes,
+        "posts": posts,
+    }
 
     copy_static(out_root)
-    render("home.html", ctx, os.path.join(out_root,"index.html"))
-    render("about.html", ctx, os.path.join(out_root,"about","index.html"))
-    render("reviews.html", ctx, os.path.join(out_root,"reviews","index.html"))
-    render("blog/index.html", ctx, os.path.join(out_root,"blog","index.html"))
+
+    render("home.html", context, os.path.join(out_root, "index.html"))
+    render("about.html", context, os.path.join(out_root, "about", "index.html"))
+    render("reviews.html", context, os.path.join(out_root, "reviews", "index.html"))
+    render("blog/index.html", context, os.path.join(out_root, "blog", "index.html"))
     for ep in episodes:
-        render("episode.html", {**ctx,"ep":ep}, os.path.join(out_root,"episodes",ep["slug"],"index.html"))
+        render(
+            "episode.html",
+            {**context, "ep": ep},
+            os.path.join(out_root, "episodes", ep["slug"], "index.html"),
+        )
+
+    # basic sitemap / robots could be added here if you want
+
 
 def main():
-    target = os.getenv("SHOW_SLUG")  # build a single show if set
-    with open(os.path.join(BASE_DIR,"config","shows.yaml"),"r") as f:
-        cfg = yaml.safe_load(f)
+    target = os.getenv("SHOW_SLUG")  # build just one show if set
+    with open(os.path.join(BASE_DIR, "config", "shows.yaml"), "r") as f:
+        config = yaml.safe_load(f)
+
     ensure_dir(PUBLIC_DIR)
-    for show in cfg.get("shows",[]):
+    for show in config.get("shows", []):
         slug = show.get("slug") or to_slug(show.get("title") or "podcast")
-        if target and slug != target: continue
-        build_show(show, os.path.join(PUBLIC_DIR, slug))
+        if target and slug != target:
+            continue
+        out_root = os.path.join(PUBLIC_DIR, slug)
+        build_show(show, out_root)
+
     print(f"\nAll done. Static sites generated in: {PUBLIC_DIR}")
 
-if __name__=="__main__": main()
+
+if __name__ == "__main__":
+    main()

@@ -2,9 +2,60 @@
 {% block content %}
 <article class="episode">
   <h1>{{ ep.title }}</h1>
+
+  {% if ep.image %}
+    <img src="{{ ep.image }}" alt="{{ ep.title }}" class="ep-hero-art">
+  {% endif %}
+
   <div class="muted">{{ ep.published | date("%b %d, %Y") }}</div>
-  {% if ep.audio %}<p><audio controls src="{{ ep.audio }}" style="width:100%"></audio></p>{% endif %}
-  <div class="content">{{ ep.content | safe }}</div>
-  {% if ep.transcript_url %}<p><a href="{{ ep.transcript_url }}" target="_blank">Transcript</a></p>{% endif %}
+
+  {% if ep.audio %}
+    <p><audio controls src="{{ ep.audio }}" style="width:100%"></audio></p>
+  {% endif %}
+
+  <div class="content">
+    {{ ep.content | safe }}
+  </div>
+
+  {% if ep.transcript_url and not ep.extra_html %}
+    <p><a href="{{ ep.transcript_url }}" target="_blank">Transcript</a></p>
+  {% endif %}
+
+  {% if ep.guests %}
+  <section class="episode-guests">
+    <h2>Guests</h2>
+    <ul>
+      {% for g in ep.guests %}
+      <li>
+        {% if g.url %}
+          <a href="{{ g.url }}" target="_blank">{{ g.name }}</a>
+        {% else %}
+          {{ g.name }}
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% if ep.extra_html %}
+  <section class="episode-notes">
+    <h2>Show Notes & Transcript</h2>
+    <div class="content">
+      {{ ep.extra_html | safe }}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if ep.comments %}
+  <section class="episode-comments">
+    <h2>Notes</h2>
+    <ul>
+      {% for c in ep.comments %}
+        <li>{{ c }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
 </article>
 {% endblock %}
