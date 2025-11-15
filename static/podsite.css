@@ -372,33 +372,33 @@ a:hover {
   }
 }
 
-/* ===========================
-   Episode Card Tightening
-   =========================== */
+/* ============================================
+   FORCE-OVERRIDE — EPISODE CARD TIGHTENING
+   ============================================ */
 
-.episode-card {
-  padding: 16px;
+.episode-grid .episode-card {
+  padding: 14px 16px 18px 16px !important;
 }
 
-.episode-card h3 {
-  margin: 12px 0 4px 0;   /* title tight above date */
+.episode-grid .episode-card h3 {
+  margin: 10px 0 2px 0 !important;
+  line-height: 1.25;
 }
 
-.episode-card .date {
-  margin: 0 0 8px 0;
-  font-size: 0.9rem;
-  opacity: 0.75;
+.episode-grid .episode-card .date {
+  margin: 0 0 10px 0 !important;
+  font-size: 0.9rem !important;
+  opacity: 0.8 !important;
+  display: block;
 }
 
-.episode-card .summary {
-  margin-top: 12px;
-  padding-top: 12px;
-
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  /* thinner line for your dark theme */
+.episode-grid .episode-card .summary {
+  margin-top: 10px !important;
+  padding-top: 10px !important;
+  border-top: 1px solid rgba(255,255,255,0.12) !important;
 }
 
-.episode-card .listen {
-  margin-top: 12px;
-  display: inline-block;
+.episode-grid .episode-card .listen {
+  margin-top: 10px !important;
+  display: inline-block !important;
 }
