@@ -13,7 +13,7 @@
         <p class="subtitle">{{ ep.subtitle }}</p>
       {% endif %}
       {% if ep.audio %}
-        <audio controls class="episode-audio">
+        <audio controls class="episode-audio" id="episode-audio">
           <source src="{{ ep.audio }}">
           Your browser does not support the audio element.
         </audio>
@@ -74,9 +74,22 @@
     </div>
 
     {% if page.transcript_html %}
-      <section class="epi-transcript">
-        <h2>Transcript</h2>
-        {{ page.transcript_html | safe }}
+      <section class="epi-transcript" id="transcript">
+        <div class="transcript-header">
+          <h2>Transcript</h2>
+          <button
+            type="button"
+            id="toggle-timecodes"
+            class="btn btn-small"
+            aria-pressed="false"
+            aria-label="Show timestamps in transcript"
+          >
+            Show timestamps
+          </button>
+        </div>
+        <div class="transcript-body">
+          {{ page.transcript_html | safe }}
+        </div>
       </section>
     {% elif ep.transcript_url %}
       <section class="epi-transcript">

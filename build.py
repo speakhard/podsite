@@ -115,6 +115,7 @@ def load_episode_page(show_slug: str, ep_slug: str):
     content/episodes/<show_slug>/<ep_slug>.md
 
     ---
+    subtitle: "Short tagline for this episode"
     hosts:
       - name: "Host 1"
         url: "https://example.com"
@@ -233,6 +234,12 @@ def build_show(show: dict, out_root: Path):
         else:
             published = time.time()
 
+        # Slug first, so we can load markdown page
+        ep_slug = to_slug(e.get("title") or str(published))
+
+        # Optional per-episode Markdown metadata (subtitle, hosts, guests, transcript, etc.)
+        page_meta = load_episode_page(show_slug, ep_slug)
+
         # Audio URL
         audio_url = ""
         if hasattr(e, "enclosures") and e.enclosures:
@@ -245,9 +252,30 @@ def build_show(show: dict, out_root: Path):
 
         # Summary / subtitle
         summary_raw = e.get("summary", "") or ""
-        summary = html.unescape(summary_raw)
-        plain_summary = re.sub(r"<[^>]+?>", "", summary).strip()
-        subtitle = getattr(e, "itunes_subtitle", None) or plain_summary
+        summary_html = html.unescape(summary_raw)
+        plain_summary = re.sub(r"<[^>]+?>", "", summary_html).strip()
+
+        # Subtitle priority:
+        # 1) subtitle from episode markdown front matter
+        # 2) itunes:subtitle or subtitle from feed
+        # 3) trimmed plain summary
+        subtitle = None
+        fm = page_meta.get("frontmatter", {}) or {}
+        if fm.get("subtitle"):
+            subtitle = fm["subtitle"]
+
+        if not subtitle:
+            subtitle = getattr(e, "itunes_subtitle", None) or getattr(e, "subtitle", None)
+
+        if not subtitle:
+            base = plain_summary
+            max_len = 160
+            if len(base) > max_len:
+                subtitle = base[:max_len].rstrip() + "…"
+            else:
+                subtitle = base
+
+        subtitle = html.unescape(subtitle)
 
         # Episode image
         ep_image = ""
@@ -260,14 +288,12 @@ def build_show(show: dict, out_root: Path):
             if isinstance(it_img, dict):
                 ep_image = it_img.get("href") or it_img.get("url") or ""
 
-        ep_slug = to_slug(e.get("title") or str(published))
-
         ep = {
             "id": e.get("id") or e.get("guid") or e.get("link") or str(published),
             "title": e.get("title", "Untitled Episode"),
             "link": e.get("link", ""),
             "published": published,
-            "summary": summary,
+            "summary": summary_html,
             "subtitle": subtitle,
             "content": (
                 getattr(e, "content", [{}])[0].get("value", "")
@@ -278,9 +304,8 @@ def build_show(show: dict, out_root: Path):
             "slug": ep_slug,
             "transcript_url": getattr(e, "podcast_transcript", None) or "",
             "image": ep_image or site["image"],
+            "page": page_meta,
         }
-
-        ep["page"] = load_episode_page(show_slug, ep_slug)
 
         episodes.append(ep)
 
