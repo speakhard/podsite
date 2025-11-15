@@ -114,6 +114,7 @@ a:hover{text-decoration:underline;}
   padding:16px;
   border-radius:10px;
   border:1px solid #273244;
+  overflow:hidden;          /* keeps image from spilling outside rounded corners */
 }
 
 .episode-card h3{
@@ -139,9 +140,14 @@ a:hover{text-decoration:underline;}
 
 .ep-thumb{
   width:100%;
+  display:block;
   border-radius:8px;
   margin-bottom:8px;
-  display:block;
+
+  /* New stuff to keep thumbnails card-sized */
+  aspect-ratio: 1 / 1;      /* force a square */
+  object-fit: cover;        /* crop edges instead of squishing */
+  max-height: 260px;        /* safety cap so they never get gigantic */
 }
 
 .ep-hero-art{
