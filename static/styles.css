@@ -103,10 +103,10 @@ a:hover{text-decoration:underline;}
 
 .episodes h2{margin-top:8px;}
 
-.episode-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:16px;
+.episode-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
 }
 
 .episode-card {
@@ -135,17 +135,16 @@ a:hover{text-decoration:underline;}
 /* Thumbnails */
 
 .ep-thumb {
-  width: 180px;        /* pick a size you like: 160–220px is a good range */
-  height: auto;        /* let the image decide its own height */
+  width: 180px;        /* adjust if you want bigger/smaller */
+  height: auto;        /* let the natural square art decide height */
   display: block;
-  margin: 0 auto 12px; /* center it in the card */
+  margin: 0 auto 12px; /* center in the card */
 
-  /* IMPORTANT: no cropping or scaling tricks */
-  object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.35);
-  background: #020617; /* optional subtle backing */
-  padding: 4px;        /* optional frame */
+  background: #020617;
+  padding: 4px;
+  object-fit: contain; /* harmless now, no forced box */
 }
 
 .ep-hero-art{
