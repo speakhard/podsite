@@ -1,4 +1,4 @@
-:root {
+:root{
   --accent:#4b6bfb;
   --bg:#0d1117;
   --panel:#1f2937;
@@ -7,9 +7,9 @@
   --header-bg:#111827;
 }
 
-* { box-sizing:border-box; }
+*{box-sizing:border-box;}
 
-body {
+body{
   margin:0;
   background:var(--bg);
   color:var(--text);
@@ -17,13 +17,13 @@ body {
   line-height:1.5;
 }
 
-a {
+a{
   color:var(--accent);
   text-decoration:none;
 }
-a:hover { text-decoration:underline; }
+a:hover{text-decoration:underline;}
 
-.container {
+.container{
   max-width:1100px;
   margin:0 auto;
   padding:0 16px;
@@ -31,66 +31,66 @@ a:hover { text-decoration:underline; }
 
 /* Header */
 
-.site-header {
+.site-header{
   background:var(--header-bg);
   border-bottom:1px solid #1f2937;
 }
 
-.header-inner {
+.header-inner{
   display:flex;
   justify-content:space-between;
   align-items:center;
   padding:12px 0;
 }
 
-.logo {
+.logo{
   width:36px;
   height:36px;
   border-radius:8px;
   margin-right:8px;
 }
 
-.logo-wrap {
+.logo-wrap{
   display:flex;
   align-items:center;
 }
 
-.brand {
+.brand{
   font-weight:700;
   color:#e5e7eb;
 }
 
-.nav a {
+.nav a{
   margin-left:16px;
   color:#cbd5e1;
 }
 
 /* Hero */
 
-.hero {
+.hero{
   display:flex;
   gap:24px;
   align-items:center;
   padding:28px 0;
 }
 
-.hero-art {
+.hero-art{
   width:260px;
   border-radius:12px;
   box-shadow:0 10px 24px rgba(0,0,0,.4);
 }
 
-.hero-right h1 {
+.hero-right h1{
   margin:0 0 8px 0;
   font-size:2rem;
 }
 
-.tagline {
+.tagline{
   color:#cbd5e1;
   margin:0 0 12px 0;
 }
 
-.btn-subscribe {
+.btn-subscribe{
   display:inline-block;
   background:var(--accent);
   color:#fff;
@@ -101,50 +101,50 @@ a:hover { text-decoration:underline; }
 
 /* Episodes grid */
 
-.episodes h2 { margin-top:8px; }
+.episodes h2{margin-top:8px;}
 
-.episode-grid {
+.episode-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
   gap:16px;
 }
 
-.episode-card {
+.episode-card{
   background:var(--panel);
   padding:16px;
   border-radius:10px;
   border:1px solid #273244;
 }
 
-.episode-card h3 {
+.episode-card h3{
   margin:.2rem 0;
 }
 
-.date {
+.date{
   color:var(--muted);
   font-size:.9rem;
   margin:.2rem 0 .5rem;
 }
 
-.listen {
+.summary{
+  margin:.2rem 0 .4rem;
+}
+
+.listen{
   display:inline-block;
   margin-top:.4rem;
 }
 
-.summary {
-  margin:0.2rem 0 0.4rem;
-}
+/* Thumbnails */
 
-/* Episode thumbnails */
-
-.ep-thumb {
+.ep-thumb{
   width:100%;
   border-radius:8px;
   margin-bottom:8px;
   display:block;
 }
 
-.ep-hero-art {
+.ep-hero-art{
   width:220px;
   max-width:40%;
   border-radius:12px;
@@ -154,23 +154,37 @@ a:hover { text-decoration:underline; }
 
 /* Episode detail sections */
 
-.muted { color:var(--muted); }
+.muted{color:var(--muted);}
+
+.ep-meta{
+  margin-top:.5rem;
+  margin-bottom:1rem;
+  font-size:.95rem;
+}
+
+.ep-meta strong{
+  font-weight:600;
+}
+
+.ep-description{
+  margin:1rem 0;
+}
 
 .episode-guests,
 .episode-notes,
-.episode-comments {
+.episode-comments{
   margin-top:1.5rem;
 }
 
 .episode-guests h2,
 .episode-notes h2,
-.episode-comments h2 {
-  margin-bottom:0.5rem;
+.episode-comments h2{
+  margin-bottom:.5rem;
 }
 
 /* Footer */
 
-.site-footer {
+.site-footer{
   border-top:1px solid #1f2937;
   margin-top:40px;
   padding:20px 0;

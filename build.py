@@ -3,7 +3,6 @@ import time
 import shutil
 import yaml
 import feedparser
-import datetime
 import glob
 import json
 import re
@@ -25,9 +24,9 @@ env = Environment(
 )
 env.globals["now"] = lambda: datetime.now(timezone.utc)
 env.filters["date"] = (
-    lambda dt, fmt="%b %d, %Y": datetime.datetime.fromtimestamp(dt).strftime(fmt)
-    if isinstance(dt, (int, float))
-    else str(dt)
+    lambda ts, fmt="%b %d, %Y": datetime.fromtimestamp(ts).strftime(fmt)
+    if isinstance(ts, (int, float))
+    else str(ts)
 )
 
 
@@ -84,20 +83,21 @@ def load_episode_extra(show_slug: str, ep_slug: str):
     Optional per-episode overrides:
     content/episodes/<show-slug>/<episode-slug>.md
 
-    Supports YAML frontmatter:
     ---
+    hosts:
+      - name: "Host Name"
+        url: "https://example.com"
     guests:
-      - name: "Jane Doe"
-        url: "https://janedoe.com"
+      - name: "Guest Name"
+        url: "https://example.com"
     comments:
-      - "Recorded right after the election."
+      - "Note 1"
+      - "Note 2"
     ---
 
     <markdown body for notes/transcript>
     """
-    path = os.path.join(
-        BASE_DIR, "content", "episodes", show_slug, f"{ep_slug}.md"
-    )
+    path = os.path.join(BASE_DIR, "content", "episodes", show_slug, f"{ep_slug}.md")
     if not os.path.exists(path):
         return {}
 
@@ -111,8 +111,8 @@ def load_episode_extra(show_slug: str, ep_slug: str):
         front = yaml.safe_load(fm) or {}
 
     html_body = md_to_html(body)
-
     return {
+        "hosts": front.get("hosts", []),
         "guests": front.get("guests", []),
         "comments": front.get("comments", []),
         "extra_html": html_body,
@@ -144,7 +144,7 @@ def build_show(show, out_root):
         "layout": theme.get("layout", "cards"),
     }
 
-    # Show artwork (site-wide)
+    # Show-wide artwork
     img_url = ""
     if hasattr(fp.feed, "image"):
         img = getattr(fp.feed, "image")
@@ -194,17 +194,24 @@ def build_show(show, out_root):
                     audio_url = L.get("href", "")
                     break
 
-        # Subtitle vs full content
-        subtitle = (
-            getattr(e, "itunes_subtitle", None)
-            or getattr(e, "itunes_summary", None)
-            or e.get("summary", "")
-        )
+        # Base summary from feed
+        raw_summary = e.get("summary", "")
+        plain_summary = re.sub("<[^>]+>", "", raw_summary or "").strip()
 
+        # Subtitle: prefer itunes fields, else truncated summary
+        subtitle = getattr(e, "itunes_subtitle", None) or getattr(
+            e, "itunes_summary", None
+        )
+        if not subtitle:
+            subtitle = plain_summary
+            if len(subtitle) > 180:
+                subtitle = subtitle[:177] + "…"
+
+        # Full content for episode page (HTML from feed, if any)
         full_content = (
             getattr(e, "content", [{}])[0].get("value", "")
             if hasattr(e, "content")
-            else e.get("summary", "")
+            else raw_summary
         )
 
         # Episode artwork via itunes:image or image; fallback to show art
@@ -233,9 +240,9 @@ def build_show(show, out_root):
             if saved_ep:
                 ep_image_path = f"/images/{saved_ep}"
 
-        # fallback: show art
-        if not ep_image_path:
-            ep_image_path = site.get("image", "")
+        # fallback: ALWAYS at least show the show art if we have it
+        if not ep_image_path and site.get("image"):
+            ep_image_path = site["image"]
 
         ep = {
             "id": e.get("id") or e.get("guid") or e.get("link") or str(published),
@@ -243,11 +250,15 @@ def build_show(show, out_root):
             "slug": to_slug(e.get("title") or str(published)),
             "link": e.get("link", ""),
             "published": published,
-            # what tiles show
+
+            # list/card display
             "subtitle": subtitle,
             "summary": subtitle,
-            # what the episode page shows
+
+            # long-form description for the episode page
+            "description": plain_summary,
             "content": full_content,
+
             "audio": audio_url,
             "image": ep_image_path,
             "transcript_url": getattr(e, "podcast_transcript", None) or "",
@@ -258,8 +269,13 @@ def build_show(show, out_root):
 
     # Per-episode extras from local markdown
     show_slug = show.get("slug") or to_slug(site["title"])
+    default_hosts = show.get("hosts", []) or []
+
     for ep in episodes:
         extra = load_episode_extra(show_slug, ep["slug"])
+
+        # hosts: per-episode hosts override or extend show-level hosts
+        ep["hosts"] = extra.get("hosts", []) or default_hosts
         ep["guests"] = extra.get("guests", [])
         ep["comments"] = extra.get("comments", [])
         ep["extra_html"] = extra.get("extra_html", "")
@@ -286,7 +302,7 @@ def build_show(show, out_root):
             os.path.join(out_root, "episodes", ep["slug"], "index.html"),
         )
 
-    # basic sitemap / robots could be added here if you want
+    print(f"Finished {site['title']} -> {out_root}")
 
 
 def main():
