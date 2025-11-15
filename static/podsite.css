@@ -1,0 +1,24 @@
+/* === EPISODE GRID LAYOUT ======================================= */
+
+.episode-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* === EPISODE THUMBNAILS – HARD OVERRIDE ========================= */
+/* These rules are intentionally very specific and use !important
+   so they win over anything in styles.css. */
+
+.episode-card img.ep-thumb {
+  width: 180px !important;     /* small square */
+  height: 180px !important;
+  display: block !important;
+  margin: 0 auto 12px !important;
+
+  object-fit: contain !important; /* NO CROPPING */
+  background: #020617;
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
