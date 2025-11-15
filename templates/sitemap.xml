@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Home page -->
+  <url>
+    <loc>{{ site.link or ('https://' ~ site.slug ~ '.example.com') }}</loc>
+  </url>
+
+  <!-- Episode pages -->
+  {% for ep in episodes %}
+  <url>
+    <loc>{{ site.link.rstrip('/') }}/episodes/{{ ep.slug }}/</loc>
+    <lastmod>{{ ep.published | date("%Y-%m-%d") }}</lastmod>
+  </url>
+  {% endfor %}
+
+  <!-- Blog index -->
+  <url>
+    <loc>{{ site.link.rstrip('/') }}/blog/</loc>
+  </url>
+
+</urlset>
