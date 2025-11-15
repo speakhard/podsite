@@ -134,13 +134,18 @@ a:hover{text-decoration:underline;}
 
 /* Thumbnails */
 
-.ep-thumb{
+.ep-thumb {
   width: 100%;
-  height: 220px;        /* <— hard cap the height */
-  object-fit: cover;    /* crop instead of stretching */
+  max-width: 240px;      /* controls the visual size — adjust to taste */
+  height: 240px;         /* forces a perfect square */
+  margin: 0 auto 12px;   /* centers it */
   display: block;
+
+  object-fit: contain;   /* NO CROPPING — scales art down */
+  background: #111827;   /* subtle dark panel behind image */
   border-radius: 8px;
-  margin-bottom: 8px;
+  padding: 4px;          /* a little breathing room */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
 .ep-hero-art{
