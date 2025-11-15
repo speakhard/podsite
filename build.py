@@ -1,11 +1,9 @@
 import os
-import sys
 import time
 import shutil
 import yaml
 import feedparser
 import datetime
-import glob
 import json
 import re
 import html
@@ -13,7 +11,6 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-# only these exist in utils.py
 from utils import ensure_dir, to_slug, download_image, md_to_html
 
 # --------------------------------------------------------------------
@@ -45,19 +42,17 @@ env.filters["date"] = (
 # --------------------------------------------------------------------
 
 
-def parse_feed(url: str):
-    return feedparser.parse(url)
-
-
 def render(template: str, context: dict, out_path: Path):
     html_str = env.get_template(template).render(**context)
     ensure_dir(out_path.parent)
-    with out_path.open("w", encoding="utf-8") as f:
-        f.write(html_str)
+    out_path.write_text(html_str, encoding="utf-8")
 
 
 def copy_static(dest: Path):
-    shutil.copytree(STATIC_DIR, dest / "static", dirs_exist_ok=True)
+    """Copy static assets into <out_root>/static"""
+    src = str(STATIC_DIR)
+    dst = str(dest / "static")
+    shutil.copytree(src, dst, dirs_exist_ok=True)
 
 
 def load_reviews(slug: str):
@@ -115,11 +110,9 @@ def load_posts(slug: str):
 
 def load_episode_page(show_slug: str, ep_slug: str):
     """
-    Load optional per-episode markdown file:
+    Optional per-episode markdown:
 
     content/episodes/<show_slug>/<ep_slug>.md
-
-    With optional YAML front matter:
 
     ---
     hosts:
@@ -129,10 +122,10 @@ def load_episode_page(show_slug: str, ep_slug: str):
       - name: "Guest Name"
         url: "https://guest-site"
     comments:
-      - "Any notes / content warnings here."
+      - "Any notes / CWs here."
     ---
 
-    Transcript text in Markdown...
+    Transcript text...
     """
     path = BASE_DIR / "content" / "episodes" / show_slug / f"{ep_slug}.md"
     if not path.exists():
@@ -171,7 +164,7 @@ def build_show(show: dict, out_root: Path):
     print(f"==> Building {show.get('title')}")
 
     feed_url = show["feed"]
-    fp = parse_feed(feed_url)
+    fp = feedparser.parse(feed_url)
 
     show_slug = show.get("slug") or to_slug(show.get("title") or "podcast")
 
@@ -195,14 +188,13 @@ def build_show(show: dict, out_root: Path):
         "slug": show_slug,
     }
 
-    # Artwork for the show
+    # Show artwork
     img_url = ""
     if hasattr(fp.feed, "image"):
         img = getattr(fp.feed, "image")
         if isinstance(img, dict):
             img_url = img.get("href") or img.get("url") or ""
 
-    # itunes:image sometimes appears separately
     if not img_url and hasattr(fp.feed, "itunes_image"):
         it_img = getattr(fp.feed, "itunes_image")
         if isinstance(it_img, dict):
@@ -225,11 +217,10 @@ def build_show(show: dict, out_root: Path):
         )
     site["analytics_head"] += analytics.get("custom_head_html", "")
 
-    # CNAME for custom domain
+    # CNAME
     if show.get("domain"):
         ensure_dir(out_root)
-        cname_path = out_root / "CNAME"
-        cname_path.write_text(show["domain"].strip(), encoding="utf-8")
+        (out_root / "CNAME").write_text(show["domain"].strip(), encoding="utf-8")
 
     # Episodes
     episodes = []
@@ -258,7 +249,7 @@ def build_show(show: dict, out_root: Path):
         plain_summary = re.sub(r"<[^>]+?>", "", summary).strip()
         subtitle = getattr(e, "itunes_subtitle", None) or plain_summary
 
-        # Episode image (leave as remote URL; we don't need to download)
+        # Episode image
         ep_image = ""
         if hasattr(e, "image"):
             img = getattr(e, "image")
@@ -289,12 +280,10 @@ def build_show(show: dict, out_root: Path):
             "image": ep_image or site["image"],
         }
 
-        # Optional per-episode markdown (hosts, guests, transcript, etc.)
         ep["page"] = load_episode_page(show_slug, ep_slug)
 
         episodes.append(ep)
 
-    # Sort episodes (newest first)
     episodes.sort(key=lambda x: x["published"], reverse=True)
 
     # Reviews + posts
@@ -308,7 +297,6 @@ def build_show(show: dict, out_root: Path):
         "build_time": datetime.datetime.now(datetime.timezone.utc),
     }
 
-    # Static assets
     copy_static(out_root)
 
     # Pages
@@ -317,7 +305,6 @@ def build_show(show: dict, out_root: Path):
     render("reviews.html", {**context, "reviews": reviews}, out_root / "reviews" / "index.html")
     render("blog/index.html", {**context, "posts": posts}, out_root / "blog" / "index.html")
 
-    # Episode detail pages
     for ep in episodes:
         render(
             "episode.html",
@@ -325,7 +312,6 @@ def build_show(show: dict, out_root: Path):
             out_root / "episodes" / ep["slug"] / "index.html",
         )
 
-    # Blog posts
     for p in posts:
         render(
             "blog/post.html",

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- Home page -->
+  <!-- Home -->
   <url>
-    <loc>{{ site.link or ('https://' ~ site.slug ~ '.example.com') }}</loc>
+    <loc>{{ site.link or '' }}</loc>
   </url>
 
-  <!-- Episode pages -->
+  <!-- Episodes -->
   {% for ep in episodes %}
   <url>
     <loc>{{ site.link.rstrip('/') }}/episodes/{{ ep.slug }}/</loc>

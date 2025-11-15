@@ -1,37 +1,42 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
   <title>{{ site.title }}</title>
-  <link rel="stylesheet" href="/static/podsite.css?v=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% if site.tagline %}
+  <meta name="description" content="{{ site.tagline }}">
+  {% endif %}
+  <link rel="stylesheet" href="/static/podsite.css">
   {{ site.analytics_head | safe }}
 </head>
-<body style="--accent: {{ site.accent }}; --bg: {{ site.bg }}; --panel: {{ site.panel }}; --text: {{ site.text }}; --muted: {{ site.muted }}; --header-bg: {{ site.header_bg }};">
-<header class="site-header">
-  <div class="container header-inner">
-    <div class="logo-wrap">
-      {% if site.image %}
-        <img src="{{ site.image }}" class="logo" alt="{{ site.title }}">
-      {% endif %}
-      <a class="brand" href="/">{{ site.title }}</a>
+<body>
+  <header class="site-header">
+    <div class="nav-inner">
+      <div class="nav-left">
+        {% if site.image %}
+          <img src="{{ site.image }}" alt="{{ site.title }}" class="nav-logo">
+        {% endif %}
+        <div class="nav-title">
+          <a href="/">{{ site.title }}</a>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/#episodes">Episodes</a>
+        <a href="/about/">About</a>
+        <a href="/reviews/">Reviews</a>
+        <a href="/blog/">Blog</a>
+      </nav>
     </div>
-    <nav class="nav">
-      <a href="/">Home</a>
-      <a href="/#episodes">Episodes</a>
-      <a href="/about/">About</a>
-      <a href="/reviews/">Reviews</a>
-      <a href="/blog/">Blog</a>
-    </nav>
-  </div>
-</header>
-<main class="container">
-  {% block content %}{% endblock %}
-</main>
-<footer class="site-footer">
-  <div class="container">
+  </header>
+
+  <main class="site-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
     <p>© {{ now().year }} {{ site.title }}</p>
-  </div>
-</footer>
+  </footer>
 </body>
 </html>

@@ -1,24 +1,321 @@
-/* === EPISODE GRID LAYOUT ======================================= */
+/* Base */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #020617;
+  color: #e5e7eb;
+}
+
+a {
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Layout */
+
+.site-header {
+  background: #020617;
+  border-bottom: 1px solid #111827;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.nav-title a {
+  font-weight: 600;
+  font-size: 14px;
+  color: #e5e7eb;
+}
+
+.nav-links {
+  display: flex;
+  gap: 18px;
+  font-size: 14px;
+}
+
+.nav-links a {
+  color: #9ca3af;
+}
+
+.nav-links a:hover {
+  color: #e5e7eb;
+}
+
+.site-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+.site-footer {
+  border-top: 1px solid #111827;
+  padding: 16px 20px;
+  text-align: center;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Hero */
+
+.hero {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.hero-left {
+  flex: 0 0 auto;
+}
+
+.hero-right {
+  flex: 1 1 auto;
+}
+
+.hero-art {
+  max-width: 220px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  display: block;
+}
+
+.hero-right h1 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.hero-right .tagline {
+  margin: 0 0 16px;
+  color: #9ca3af;
+  max-width: 560px;
+}
+
+.subscribe-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.btn-subscribe {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #1d4ed8;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.btn-subscribe:hover {
+  background: #2563eb;
+}
+
+/* Episodes grid */
+
+.episodes h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+}
 
 .episode-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 20px;
 }
 
-/* === EPISODE THUMBNAILS – HARD OVERRIDE ========================= */
-/* These rules are intentionally very specific and use !important
-   so they win over anything in styles.css. */
-
-.episode-card img.ep-thumb {
-  width: 180px !important;     /* small square */
-  height: 180px !important;
-  display: block !important;
-  margin: 0 auto 12px !important;
-
-  object-fit: contain !important; /* NO CROPPING */
+.episode-card {
   background: #020617;
-  border-radius: 8px;
-  padding: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  border-radius: 12px;
+  padding: 12px 12px 16px;
+  box-shadow: 0 0 0 1px #111827;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ep-thumb-link {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.ep-thumb {
+  width: 240px;
+  height: 240px;
+  margin: 0 auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #020617;
+}
+
+.episode-card h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.episode-card h3 a {
+  color: #e5e7eb;
+}
+
+.episode-card .date {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.episode-card .summary {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.episode-card .listen {
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+/* Episode detail */
+
+.episode-page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.episode-page-header {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.episode-page-art {
+  width: 260px;
+  height: 260px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #020617;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+}
+
+.episode-page-meta h1 {
+  margin: 0 0 6px;
+  font-size: 24px;
+}
+
+.episode-page-meta .date {
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 0 0 10px;
+}
+
+.episode-page-meta .subtitle {
+  font-size: 14px;
+  color: #e5e7eb;
+  margin: 0 0 12px;
+}
+
+.episode-audio {
+  width: 100%;
+  margin-top: 6px;
+}
+
+.episode-main {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #d1d5db;
+}
+
+.people-block {
+  margin-bottom: 16px;
+}
+
+.people-block h2 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.people-block ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.people-block li {
+  font-size: 14px;
+}
+
+.epi-comments {
+  margin-bottom: 16px;
+}
+
+.epi-comments h2 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.epi-description {
+  margin: 16px 0;
+}
+
+.epi-transcript {
+  margin-top: 24px;
+}
+
+.epi-transcript h2 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-art {
+    max-width: 180px;
+  }
+
+  .episode-page-header {
+    flex-direction: column;
+  }
+
+  .episode-page-art {
+    width: 220px;
+    height: 220px;
+  }
 }
