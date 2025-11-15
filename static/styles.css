@@ -109,12 +109,12 @@ a:hover{text-decoration:underline;}
   gap:16px;
 }
 
-.episode-card{
+.episode-card {
   background: var(--panel);
   padding: 16px;
   border-radius: 10px;
   border: 1px solid #273244;
-  overflow: hidden;        /* keep corners clean */
+  overflow: hidden;
 }
 
 .date{
@@ -135,17 +135,17 @@ a:hover{text-decoration:underline;}
 /* Thumbnails */
 
 .ep-thumb {
-  width: 100%;
-  max-width: 240px;      /* controls the visual size — adjust to taste */
-  height: 240px;         /* forces a perfect square */
-  margin: 0 auto 12px;   /* centers it */
+  width: 180px;        /* pick a size you like: 160–220px is a good range */
+  height: auto;        /* let the image decide its own height */
   display: block;
+  margin: 0 auto 12px; /* center it in the card */
 
-  object-fit: contain;   /* NO CROPPING — scales art down */
-  background: #111827;   /* subtle dark panel behind image */
+  /* IMPORTANT: no cropping or scaling tricks */
+  object-fit: contain;
   border-radius: 8px;
-  padding: 4px;          /* a little breathing room */
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+  background: #020617; /* optional subtle backing */
+  padding: 4px;        /* optional frame */
 }
 
 .ep-hero-art{
