@@ -3,103 +3,93 @@
 
 <article class="episode-page">
   <header class="episode-page-header">
-    {% if ep.image %}
-      <img src="{{ ep.image }}" alt="{{ ep.title }} cover art" class="episode-page-art">
-    {% endif %}
-    <div class="episode-page-meta">
-      <h1>{{ ep.title }}</h1>
-      <p class="date">{{ ep.published | date("%b %d, %Y") }}</p>
-      {% if ep.subtitle %}
-        <p class="subtitle">{{ ep.subtitle }}</p>
+    <div class="episode-page-art-wrap">
+      {% if ep.image %}
+        <img src="{{ ep.image }}" alt="{{ ep.title }}" class="episode-page-art">
+      {% elif site.image %}
+        <img src="{{ site.image }}" alt="{{ site.title }}" class="episode-page-art">
       {% endif %}
+    </div>
+
+    <div class="episode-page-meta">
+      <h1 class="episode-page-title">{{ ep.title }}</h1>
+      <p class="episode-page-date">
+        {{ ep.published | date("%b %d, %Y") }}
+      </p>
+
+      {% if ep.subtitle %}
+        <p class="episode-page-subtitle">
+          {{ ep.subtitle }}
+        </p>
+      {% endif %}
+
       {% if ep.audio %}
-        <audio controls class="episode-audio" id="episode-audio">
-          <source src="{{ ep.audio }}">
+        <audio controls preload="none" class="episode-audio">
+          <source src="{{ ep.audio }}" type="audio/mpeg">
           Your browser does not support the audio element.
         </audio>
+      {% endif %}
+
+      {% if ep.transcript_url %}
+        <p class="episode-page-transcript-link">
+          <a href="{{ ep.transcript_url }}" target="_blank" rel="noopener">
+            View official transcript
+          </a>
+        </p>
       {% endif %}
     </div>
   </header>
 
-  <section class="episode-main">
-    {% set page = ep.page or {} %}
-
-    {% if page.hosts %}
-      <div class="people-block">
-        <h2>Hosts</h2>
-        <ul>
-          {% for h in page.hosts %}
-            <li>
-              {% if h.url %}
-                <a href="{{ h.url }}" target="_blank" rel="noopener">{{ h.name }}</a>
-              {% else %}
-                {{ h.name }}
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
-
-    {% if page.guests %}
-      <div class="people-block">
-        <h2>Guests</h2>
-        <ul>
-          {% for g in page.guests %}
-            <li>
-              {% if g.url %}
-                <a href="{{ g.url }}" target="_blank" rel="noopener">{{ g.name }}</a>
-              {% else %}
-                {{ g.name }}
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
-
-    {% if page.comments %}
-      <div class="epi-comments">
-        <h2>Notes</h2>
-        <ul>
-          {% for c in page.comments %}
-            <li>{{ c }}</li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
-
-    <div class="epi-description">
-      {{ ep.content | safe }}
+  <section class="episode-page-body">
+    <div class="episode-page-section">
+      <h2>Episode Notes</h2>
+      {% if ep.content %}
+        <div class="episode-page-notes">
+          {{ ep.content | safe }}
+        </div>
+      {% elif ep.summary %}
+        <p class="episode-page-notes">
+          {{ ep.summary }}
+        </p>
+      {% else %}
+        <p class="episode-page-notes episode-page-notes--empty">
+          Show notes for this episode are coming soon.
+        </p>
+      {% endif %}
     </div>
 
-    {% if page.transcript_html %}
-      <section class="epi-transcript" id="transcript">
-        <div class="transcript-header">
-          <h2>Transcript</h2>
-          <button
-            type="button"
-            id="toggle-timecodes"
-            class="btn btn-small"
-            aria-pressed="false"
-            aria-label="Show timestamps in transcript"
-          >
-            Show timestamps
-          </button>
-        </div>
-        <div class="transcript-body">
-          {{ page.transcript_html | safe }}
-        </div>
-      </section>
-    {% elif ep.transcript_url %}
-      <section class="epi-transcript">
-        <h2>Transcript</h2>
-        <p>
-          <a href="{{ ep.transcript_url }}" target="_blank" rel="noopener">
-            View transcript
-          </a>
-        </p>
-      </section>
+    {% if ep.hosts or ep.guests %}
+    <div class="episode-page-section two-column">
+      {% if ep.hosts %}
+      <div>
+        <h3>Hosts</h3>
+        <ul class="meta-list">
+          {% for h in ep.hosts %}
+            <li>{{ h }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      {% if ep.guests %}
+      <div>
+        <h3>Guests</h3>
+        <ul class="meta-list">
+          {% for g in ep.guests %}
+            <li>{{ g }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if ep.transcript_html %}
+    <div class="episode-page-section">
+      <h2>Transcript</h2>
+      <div class="episode-page-transcript">
+        {{ ep.transcript_html | safe }}
+      </div>
+    </div>
     {% endif %}
   </section>
 </article>
