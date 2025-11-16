@@ -1,24 +1,4 @@
-/* --------------------------------------------------
-   Base
--------------------------------------------------- */
-
-:root {
-  --bg: #020617;           /* slate-950 */
-  --bg-elevated: #020617;
-  --bg-card: #020617;
-  --border-subtle: #111827; /* slate-900 */
-  --border-strong: #1e293b; /* slate-800 */
-  --text-main: #e5e7eb;     /* slate-200 */
-  --text-muted: #9ca3af;    /* gray-400 */
-  --text-soft: #6b7280;     /* gray-500 */
-  --accent: #38bdf8;        /* sky-400 */
-  --accent-soft: rgba(56, 189, 248, 0.1);
-  --danger: #f97373;
-  --card-radius: 18px;
-  --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.7);
-  --shadow-subtle: 0 6px 18px rgba(15, 23, 42, 0.6);
-  --max-width: 1080px;
-}
+/* Base */
 
 *,
 *::before,
@@ -26,24 +6,15 @@
   box-sizing: border-box;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-}
-
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Segoe UI", sans-serif;
-  background: radial-gradient(circle at top, #020617 0, #020617 240px, #020617 100%);
-  color: var(--text-main);
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #020617;
+  color: #e5e7eb;
 }
-
-/* --------------------------------------------------
-   Links, text, basic elements
--------------------------------------------------- */
 
 a {
-  color: var(--accent);
+  color: #60a5fa;
   text-decoration: none;
 }
 
@@ -51,439 +22,383 @@ a:hover {
   text-decoration: underline;
 }
 
-p {
-  margin: 0 0 0.75rem;
-  line-height: 1.4;
-}
-
-/* --------------------------------------------------
-   Layout / container
--------------------------------------------------- */
-
-.page-wrap {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.page-main {
-  flex: 1 0 auto;
-}
-
-.page-inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 1.5rem 1rem 3.5rem;
-}
-
-@media (min-width: 900px) {
-  .page-inner {
-    padding: 2.5rem 0 4.5rem;
-  }
-}
-
-/* --------------------------------------------------
-   Header / nav
--------------------------------------------------- */
+/* Layout */
 
 .site-header {
+  background: #020617;
+  border-bottom: 1px solid #111827;
   position: sticky;
   top: 0;
-  z-index: 40;
-  backdrop-filter: blur(14px);
-  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.96));
-  border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+  z-index: 20;
 }
 
-.site-header-inner {
-  max-width: var(--max-width);
+.nav-inner {
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 0.5rem 1rem;
+  padding: 10px 20px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
 }
 
-@media (min-width: 900px) {
-  .site-header-inner {
-    padding: 0.75rem 0;
-  }
-}
-
-.brand {
+.nav-left {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--text-main);
+  gap: 10px;
 }
 
-.brand img {
-  width: 28px;
-  height: 28px;
+.nav-logo {
+  width: 40px;
+  height: 40px;
   border-radius: 6px;
-  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.8),
-    0 8px 18px rgba(15, 23, 42, 0.8);
-  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.nav-title a {
+  font-weight: 600;
+  font-size: 14px;
+  color: #e5e7eb;
 }
 
 .nav-links {
   display: flex;
-  gap: 1.25rem;
-  font-size: 0.8rem;
+  gap: 18px;
+  font-size: 14px;
 }
 
 .nav-links a {
-  color: var(--text-muted);
-  text-decoration: none;
+  color: #9ca3af;
 }
 
 .nav-links a:hover {
-  color: var(--text-main);
+  color: #e5e7eb;
 }
 
-/* --------------------------------------------------
-   Hero
--------------------------------------------------- */
+.site-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+.site-footer {
+  border-top: 1px solid #111827;
+  padding: 16px 20px;
+  text-align: center;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Hero */
 
 .hero {
-  margin-top: 1.75rem;
-  display: grid;
-  grid-template-columns: minmax(0, 220px) minmax(0, 1.4fr);
-  gap: 1.5rem;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 32px;
 }
 
 .hero-left {
-  display: flex;
-  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.hero-right {
+  flex: 1 1 auto;
 }
 
 .hero-art {
-  width: 220px;
-  max-width: 100%;
-  border-radius: 18px;
-  border: 1px solid rgba(15, 23, 42, 0.9);
-  box-shadow: var(--shadow-soft);
+  max-width: 220px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  display: block;
 }
 
 .hero-right h1 {
-  font-size: 1.6rem;
-  margin: 0 0 0.4rem;
+  margin: 0 0 8px;
+  font-size: 24px;
 }
 
-@media (min-width: 900px) {
-  .hero-right h1 {
-    font-size: 1.9rem;
-  }
-}
-
-.tagline {
-  margin: 0 0 0.9rem;
-  color: var(--text-soft);
-  font-size: 0.9rem;
+.hero-right .tagline {
+  margin: 0 0 16px;
+  color: #9ca3af;
+  max-width: 560px;
 }
 
 .subscribe-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 8px;
 }
 
 .btn-subscribe {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.45rem 0.9rem;
+  display: inline-block;
+  padding: 6px 12px;
   border-radius: 999px;
-  font-size: 0.8rem;
+  background: #1d4ed8;
+  color: white;
+  font-size: 13px;
   font-weight: 500;
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.14), rgba(15, 23, 42, 0.98));
-  color: var(--text-main);
-  text-decoration: none;
 }
 
 .btn-subscribe:hover {
-  border-color: rgba(56, 189, 248, 0.6);
+  background: #2563eb;
 }
 
-@media (max-width: 800px) {
-  .hero {
-    grid-template-columns: minmax(0,1fr);
-    text-align: center;
-  }
-  .hero-left {
-    order: -1;
-  }
-}
-
-/* --------------------------------------------------
-   Episodes list (HOME)
--------------------------------------------------- */
-
-.episodes {
-  margin-top: 2.5rem;
-}
+/* Episodes grid */
 
 .episodes h2 {
-  font-size: 1.1rem;
-  margin: 0 0 1rem;
+  margin: 0 0 16px;
+  font-size: 18px;
 }
 
 .episode-grid {
-  max-width: 900px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.episode-card {
+  background: #020617;
+  border-radius: 12px;
+  padding: 12px 12px 16px;
+  box-shadow: 0 0 0 1px #111827;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 8px;
 }
 
-/* Horizontal stacked card */
-.episode-card {
-  display: flex;
-  gap: 1.25rem;
-  padding: 1rem 1.1rem;
-  border-radius: var(--card-radius);
-  background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.98));
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-subtle);
-  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out,
-    border-color 0.12s ease-out, background 0.12s ease-out;
-}
-
-.episode-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--border-strong);
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.85);
-}
-
-/* Thumb: small, square, left side */
-.ep-thumb {
-  width: 150px;
-  height: 150px;
-  border-radius: 14px;
-  flex-shrink: 0;
+.ep-thumb-link {
   display: block;
-  object-fit: cover;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.9);
+  margin-bottom: 8px;
 }
 
-/* Right-hand column inside card */
-.episode-card-body {
-  flex: 1;
-  min-width: 0;
+.ep-thumb {
+  width: 240px;
+  height: 240px;
+  margin: 0 auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #020617;
 }
 
-/* Ensure structure works even if template doesn't use .episode-card-body wrapper */
-.episode-card > h3,
-.episode-card > .date,
-.episode-card > .summary,
-.episode-card > .listen {
-  max-width: calc(100% - 170px);
-}
-
-/* Typography inside card */
 .episode-card h3 {
-  margin: 0 0 0.2rem;
-  font-size: 0.95rem;
-  font-weight: 600;
+  margin: 0;
+  font-size: 15px;
 }
 
 .episode-card h3 a {
-  color: var(--text-main);
-  text-decoration: none;
-}
-
-.episode-card h3 a:hover {
-  text-decoration: underline;
+  color: #e5e7eb;
 }
 
 .episode-card .date {
-  margin: 0.05rem 0 0.5rem;
-  font-size: 0.78rem;
-  color: var(--text-soft);
+  font-size: 12px;
+  color: #6b7280;
 }
 
 .episode-card .summary {
-  margin: 0.4rem 0 0.35rem;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  max-height: 3.7em;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  font-size: 13px;
+  color: #9ca3af;
 }
 
 .episode-card .listen {
-  display: inline-flex;
-  align-items: center;
-  margin-top: 0.4rem;
-  font-size: 0.8rem;
-  color: var(--accent);
+  margin-top: 6px;
+  font-size: 13px;
 }
 
-/* Make thumb itself click through to episode page, via wrapping link in markup.
-   If you keep img directly, this still looks fine. */
-.episode-card-thumb-link {
-  display: block;
-}
-
-/* Mobile layout: vertical stack */
-@media (max-width: 720px) {
-  .episode-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .ep-thumb {
-    width: 100%;
-    max-width: 260px;
-    height: auto;
-    aspect-ratio: 1 / 1;
-  }
-
-  .episode-card > h3,
-  .episode-card > .date,
-  .episode-card > .summary,
-  .episode-card > .listen {
-    max-width: 100%;
-  }
-}
-
-/* --------------------------------------------------
-   Episode detail page
--------------------------------------------------- */
+/* Episode detail */
 
 .episode-page {
-  max-width: 860px;
-  margin: 2.5rem auto 0;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .episode-page-header {
-  display: grid;
-  grid-template-columns: minmax(0, 220px) minmax(0, 1.1fr);
-  gap: 1.5rem;
-  align-items: flex-start;
-  margin-bottom: 2rem;
-}
-
-.episode-page-art-wrap {
   display: flex;
-  justify-content: center;
+  gap: 32px;
+  align-items: flex-start;
+  margin-bottom: 24px;
 }
 
 .episode-page-art {
-  width: 220px;
-  max-width: 100%;
-  border-radius: 18px;
-  border: 1px solid rgba(15, 23, 42, 0.9);
-  box-shadow: var(--shadow-soft);
+  width: 260px;
+  height: 260px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #020617;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
 }
 
-.episode-page-meta {
-  min-width: 0;
+.episode-page-meta h1 {
+  margin: 0 0 6px;
+  font-size: 24px;
 }
 
-.episode-page-title {
-  margin: 0 0 0.2rem;
-  font-size: 1.5rem;
+.episode-page-meta .date {
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 0 0 10px;
 }
 
-.episode-page-date {
-  margin: 0 0 0.4rem;
-  font-size: 0.82rem;
-  color: var(--text-soft);
-}
-
-.episode-page-subtitle {
-  margin: 0 0 0.9rem;
-  font-size: 0.9rem;
-  color: var(--text-muted);
+.episode-page-meta .subtitle {
+  font-size: 14px;
+  color: #e5e7eb;
+  margin: 0 0 12px;
 }
 
 .episode-audio {
   width: 100%;
-  margin: 0.4rem 0 0.75rem;
+  margin-top: 6px;
 }
 
-.episode-page-transcript-link {
-  margin-top: 0.25rem;
-  font-size: 0.8rem;
+.episode-main {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #d1d5db;
 }
 
-.episode-page-body {
-  padding-top: 0.25rem;
-  border-top: 1px solid var(--border-subtle);
+.people-block {
+  margin-bottom: 16px;
 }
 
-.episode-page-section {
-  margin-bottom: 1.75rem;
+.people-block h2 {
+  font-size: 16px;
+  margin-bottom: 4px;
 }
 
-.episode-page-section.two-column {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.25rem;
-}
-
-.episode-page-section h2,
-.episode-page-section h3 {
-  margin: 0 0 0.6rem;
-  font-size: 1rem;
-}
-
-.episode-page-notes {
-  font-size: 0.9rem;
-  color: var(--text-main);
-}
-
-.episode-page-notes--empty {
-  color: var(--text-soft);
-}
-
-.episode-page-transcript {
-  font-size: 0.9rem;
-  color: var(--text-main);
-  line-height: 1.5;
-}
-
-.meta-list {
-  list-style: disc;
-  padding-left: 1.1rem;
+.people-block ul {
+  list-style: none;
+  padding: 0;
   margin: 0;
-  font-size: 0.86rem;
-  color: var(--text-main);
 }
 
-@media (max-width: 800px) {
-  .episode-page {
-    margin-top: 2rem;
+.people-block li {
+  font-size: 14px;
+}
+
+.epi-comments {
+  margin-bottom: 16px;
+}
+
+.epi-comments h2 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.epi-description {
+  margin: 16px 0;
+}
+
+.epi-transcript {
+  margin-top: 24px;
+}
+
+.epi-transcript h2 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+/* Transcript header + toggle */
+
+.transcript-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.transcript-body {
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* Timecodes: hidden by default */
+.epi-transcript .timecode {
+  display: none;
+  opacity: 0.7;
+  font-family: monospace;
+  margin-right: 0.35em;
+}
+
+/* When the transcript has .show-timecodes, reveal them */
+.epi-transcript.show-timecodes .timecode {
+  display: inline;
+}
+
+/* Generic button styles (used for timestamp toggle) */
+
+.btn {
+  border: 1px solid #374151;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.btn:hover {
+  background: #111827;
+}
+
+.btn.btn-small {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-art {
+    max-width: 180px;
   }
 
   .episode-page-header {
-    grid-template-columns: minmax(0, 1fr);
+    flex-direction: column;
   }
 
   .episode-page-art {
-    width: 200px;
+    width: 220px;
+    height: 220px;
   }
 }
 
-/* --------------------------------------------------
-   Footer
--------------------------------------------------- */
+/* ============================================
+   FORCE-OVERRIDE — EPISODE CARD TIGHTENING
+   ============================================ */
 
-.site-footer {
-  border-top: 1px solid rgba(15, 23, 42, 0.9);
-  padding: 1.5rem 1rem 2rem;
-  color: var(--text-soft);
-  font-size: 0.78rem;
+.episode-grid .episode-card {
+  padding: 14px 16px 18px 16px !important;
 }
 
-.site-footer-inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  text-align: center;
+.episode-grid .episode-card h3 {
+  margin: 10px 0 2px 0 !important;
+  line-height: 1.25;
+}
+
+.episode-grid .episode-card .date {
+  margin: 0 0 10px 0 !important;
+  font-size: 0.9rem !important;
+  opacity: 0.8 !important;
+  display: block;
+}
+
+.episode-grid .episode-card .summary {
+  margin-top: 10px !important;
+  padding-top: 10px !important;
+  border-top: 1px solid rgba(255,255,255,0.12) !important;
+}
+
+.episode-grid .episode-card .listen {
+  margin-top: 10px !important;
+  display: inline-block !important;
 }
