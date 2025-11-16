@@ -500,3 +500,39 @@ p {
   margin: 0 auto;
   text-align: center;
 }
+
+/* --------------------------------------------------
+   Hard override: home episode list layout
+   -------------------------------------------------- */
+
+.episode-grid {
+  max-width: 900px;
+  margin: 0;
+  padding: 0;
+  /* Force vertical stack, one card per row */
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem;
+}
+
+/* Make cards occupy full row width */
+.episode-card {
+  width: 100%;
+}
+
+/* Tighten title/date/description spacing */
+.episode-card .date {
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  margin: 0 !important;                 /* hug the title */
+  padding-top: 0.05rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+  margin-bottom: 0.45rem !important;    /* small gap before description */
+}
+
+.episode-card .summary {
+  margin-top: 0.0rem !important;
+  margin-bottom: 0.45rem !important;
+}
+
