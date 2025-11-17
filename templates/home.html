@@ -20,24 +20,33 @@
 
 <section class="episodes" id="episodes">
   <h2>Recent Episodes</h2>
+
   <div class="episode-grid">
     {% for ep in episodes %}
     <article class="episode-card">
 
+      {% if ep.image %}
       <a class="ep-thumb-link" href="/episodes/{{ ep.slug }}/">
         <img src="{{ ep.image }}" alt="{{ ep.title }}" class="ep-thumb">
       </a>
+      {% endif %}
 
-      <div class="episode-info">
+      <div class="episode-card-body">
         <h3>
           <a href="/episodes/{{ ep.slug }}/">{{ ep.title }}</a>
         </h3>
 
-        <p class="date">{{ ep.published | date("%b %d, %Y") }}</p>
+        <p class="date">
+          {{ ep.published | date("%b %d, %Y") }}
+        </p>
 
-        <p class="summary">{{ ep.subtitle or ep.summary }}</p>
+        <p class="summary">
+          {{ ep.subtitle or ep.summary }}
+        </p>
 
-        <a class="listen" href="/episodes/{{ ep.slug }}/">▶ Listen to Episode</a>
+        <a class="listen" href="/episodes/{{ ep.slug }}/">
+          ▶ Listen to Episode
+        </a>
       </div>
 
     </article>
