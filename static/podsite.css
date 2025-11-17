@@ -137,7 +137,6 @@ p {
 
 .nav-links a {
   color: var(--text-muted);
-  text-decoration: none;
 }
 
 .nav-links a:hover {
@@ -194,15 +193,12 @@ p {
 .btn-subscribe {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   padding: 0.45rem 0.9rem;
   border-radius: 999px;
   font-size: 0.8rem;
-  font-weight: 500;
   border: 1px solid rgba(148, 163, 184, 0.2);
   background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.14), rgba(15, 23, 42, 0.98));
   color: var(--text-main);
-  text-decoration: none;
 }
 
 .btn-subscribe:hover {
@@ -211,7 +207,7 @@ p {
 
 @media (max-width: 800px) {
   .hero {
-    grid-template-columns: minmax(0,1fr);
+    grid-template-columns: 1fr;
     text-align: center;
   }
   .hero-left {
@@ -220,7 +216,7 @@ p {
 }
 
 /* --------------------------------------------------
-   Episodes list (HOME)
+   Episode list (HOME)
 -------------------------------------------------- */
 
 .episodes {
@@ -232,7 +228,6 @@ p {
   margin: 0 0 1rem;
 }
 
-/* stacked horizontally, one card per row */
 .episode-grid {
   max-width: var(--max-width);
   display: flex;
@@ -240,48 +235,39 @@ p {
   gap: 1.1rem;
 }
 
-/* horizontal card */
+/* Horizontal card w/ grid */
 .episode-card {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
   gap: 1.25rem;
   padding: 1rem 1.25rem;
   border-radius: var(--card-radius);
-  background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.98));
+  background: radial-gradient(circle at top left,
+    rgba(15,23,42,0.98), rgba(2,6,23,0.98));
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-subtle);
-  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out,
-    border-color 0.12s ease-out, background 0.12s ease-out;
+  transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
 }
 
 .episode-card:hover {
   transform: translateY(-2px);
   border-color: var(--border-strong);
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.85);
-}
-
-/* Thumb: 240×240, left side */
-.ep-thumb-link {
-  display: block;
-  flex-shrink: 0;
+  box-shadow: 0 12px 30px rgba(15,23,42,0.85);
 }
 
 .ep-thumb {
   width: 240px;
   height: 240px;
   border-radius: 16px;
-  display: block;
   object-fit: cover;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.9);
+  box-shadow: 0 10px 24px rgba(15,23,42,0.9);
 }
 
-/* Right-hand content */
-.episode-card-body {
-  flex: 1;
-  min-width: 0;
+/* All non-thumb elements go into column 2 */
+.episode-card > :not(.ep-thumb) {
+  grid-column: 2;
 }
 
-/* Typography inside card */
 .episode-card h3 {
   margin: 0 0 0.15rem;
   font-size: 0.95rem;
@@ -290,27 +276,21 @@ p {
 
 .episode-card h3 a {
   color: var(--text-main);
-  text-decoration: none;
 }
 
-.episode-card h3 a:hover {
-  text-decoration: underline;
-}
-
-/* date: tight to title */
 .episode-card .date {
   margin: 0 0 0.25rem;
   font-size: 0.78rem;
   color: var(--text-soft);
 }
 
-/* summary: line between date and description */
+/* Divider line + summary */
 .episode-card .summary {
   margin: 0.35rem 0 0.4rem;
   padding-top: 0.45rem;
+  border-top: 1px solid var(--border-subtle);
   font-size: 0.82rem;
   color: var(--text-muted);
-  border-top: 1px solid var(--border-subtle);
   max-height: 3.7em;
   overflow: hidden;
   display: -webkit-box;
@@ -319,24 +299,26 @@ p {
 }
 
 .episode-card .listen {
-  display: inline-flex;
-  align-items: center;
   font-size: 0.8rem;
   color: var(--accent);
 }
 
-/* Mobile layout: vertical stack */
+/* Mobile */
 @media (max-width: 720px) {
   .episode-card {
-    flex-direction: column;
-    align-items: flex-start;
+    grid-template-columns: 1fr;
   }
 
   .ep-thumb {
     width: 100%;
     max-width: 280px;
     height: auto;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1/1;
+    grid-column: 1;
+  }
+
+  .episode-card > :not(.ep-thumb) {
+    grid-column: 1;
   }
 }
 
@@ -351,27 +333,16 @@ p {
 
 .episode-page-header {
   display: grid;
-  grid-template-columns: minmax(0, 220px) minmax(0, 1.1fr);
+  grid-template-columns: minmax(0,220px) minmax(0,1fr);
   gap: 1.5rem;
-  align-items: flex-start;
   margin-bottom: 2rem;
-}
-
-.episode-page-art-wrap {
-  display: flex;
-  justify-content: center;
 }
 
 .episode-page-art {
   width: 220px;
-  max-width: 100%;
   border-radius: 18px;
-  border: 1px solid rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(15,23,42,0.9);
   box-shadow: var(--shadow-soft);
-}
-
-.episode-page-meta {
-  min-width: 0;
 }
 
 .episode-page-title {
@@ -396,67 +367,15 @@ p {
   margin: 0.4rem 0 0.75rem;
 }
 
-.episode-page-transcript-link {
-  margin-top: 0.25rem;
-  font-size: 0.8rem;
-}
-
 .episode-page-body {
   padding-top: 0.25rem;
   border-top: 1px solid var(--border-subtle);
 }
 
-.episode-page-section {
-  margin-bottom: 1.75rem;
-}
-
-.episode-page-section.two-column {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.25rem;
-}
-
-.episode-page-section h2,
-.episode-page-section h3 {
-  margin: 0 0 0.6rem;
-  font-size: 1rem;
-}
-
-.episode-page-notes {
-  font-size: 0.9rem;
-  color: var(--text-main);
-}
-
-.episode-page-notes--empty {
-  color: var(--text-soft);
-}
-
+.episode-page-notes,
 .episode-page-transcript {
   font-size: 0.9rem;
   color: var(--text-main);
-  line-height: 1.5;
-}
-
-.meta-list {
-  list-style: disc;
-  padding-left: 1.1rem;
-  margin: 0;
-  font-size: 0.86rem;
-  color: var(--text-main);
-}
-
-@media (max-width: 800px) {
-  .episode-page {
-    margin-top: 2rem;
-  }
-
-  .episode-page-header {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .episode-page-art {
-    width: 200px;
-  }
 }
 
 /* --------------------------------------------------
@@ -464,7 +383,7 @@ p {
 -------------------------------------------------- */
 
 .site-footer {
-  border-top: 1px solid rgba(15, 23, 42, 0.9);
+  border-top: 1px solid rgba(15,23,42,0.9);
   padding: 1.5rem 1rem 2rem;
   color: var(--text-soft);
   font-size: 0.78rem;
