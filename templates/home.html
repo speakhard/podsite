@@ -24,14 +24,17 @@
     {% for ep in episodes %}
     <article class="episode-card">
       {% if ep.image %}
-        <a href="episodes/{{ ep.slug }}/" class="ep-thumb-link">
-          <img src="{{ ep.image }}" alt="{{ ep.title }} cover art" class="ep-thumb">
+        <a href="/episodes/{{ ep.slug }}/" class="ep-thumb-link">
+          <img src="{{ ep.image }}" alt="{{ ep.title }}" class="ep-thumb">
         </a>
       {% endif %}
-      <h3><a href="episodes/{{ ep.slug }}/">{{ ep.title }}</a></h3>
-      <p class="date">{{ ep.published | date("%b %d, %Y") }}</p>
-      <p class="summary">{{ ep.subtitle }}</p>
-      <a class="listen" href="episodes/{{ ep.slug }}/">▶ Listen to Episode</a>
+
+      <div class="episode-info">
+        <h3><a href="/episodes/{{ ep.slug }}/">{{ ep.title }}</a></h3>
+        <p class="date">{{ ep.published | date("%b %d, %Y") }}</p>
+        <p class="summary">{{ ep.subtitle or ep.summary }}</p>
+        <a class="listen" href="/episodes/{{ ep.slug }}/">▶ Listen to Episode</a>
+      </div>
     </article>
     {% endfor %}
   </div>

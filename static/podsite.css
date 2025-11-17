@@ -233,16 +233,19 @@ p {
   margin: 0 0 1.1rem;
 }
 
-/* Single column of horizontal cards */
+/* One column: stacked horizontal cards */
 .episode-grid {
   max-width: 900px;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* Horizontal stacked card */
+/* Horizontal card: art left, text right */
 .episode-card {
+  width: 100%;
   display: flex;
   align-items: flex-start;
   gap: 1rem;
@@ -265,35 +268,26 @@ p {
 }
 
 /* Thumb: small, square, left side */
+.ep-thumb-link {
+  display: block;
+  flex-shrink: 0;
+}
+
 .ep-thumb {
   width: 150px;
   height: 150px;
   border-radius: 14px;
-  flex-shrink: 0;
   display: block;
   object-fit: cover;
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.9);
 }
 
-/* Optional wrapper if you ever use it */
-.episode-card-thumb-link,
-.ep-thumb-link {
-  display: block;
-}
-
-/* Right-hand column inside card */
-.episode-card-body,
+/* Right-hand column (title / date / summary / link) */
 .episode-info {
   flex: 1;
   min-width: 0;
-}
-
-/* Fallback: if there is no wrapper, the direct children act as the right column */
-.episode-card > h3,
-.episode-card > .date,
-.episode-card > .summary,
-.episode-card > .listen {
-  max-width: calc(100% - 170px);
+  display: flex;
+  flex-direction: column;
 }
 
 /* Typography inside card */
@@ -312,11 +306,12 @@ p {
   text-decoration: underline;
 }
 
-/* Date is tight under title with divider below */
+/* Date tight under title with divider below */
 .episode-card .date {
-  margin: 0;
   font-size: 0.78rem;
   color: var(--text-soft);
+  margin: 0;
+  padding-top: 0.05rem;
   padding-bottom: 0.25rem;
   border-bottom: 1px solid rgba(148, 163, 184, 0.35);
   margin-bottom: 0.45rem;
@@ -350,18 +345,15 @@ p {
     align-items: flex-start;
   }
 
-  .ep-thumb {
+  .ep-thumb-link {
     width: 100%;
     max-width: 260px;
-    height: auto;
-    aspect-ratio: 1 / 1;
   }
 
-  .episode-card > h3,
-  .episode-card > .date,
-  .episode-card > .summary,
-  .episode-card > .listen {
-    max-width: 100%;
+  .ep-thumb {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
   }
 }
 
@@ -500,99 +492,3 @@ p {
   margin: 0 auto;
   text-align: center;
 }
-
-/* --------------------------------------------------
-   Hard override: home episode list layout
-   -------------------------------------------------- */
-
-.episode-grid {
-  max-width: 900px;
-  margin: 0;
-  padding: 0;
-  /* Force vertical stack, one card per row */
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 1rem;
-}
-
-/* Make cards occupy full row width */
-.episode-card {
-  width: 100%;
-}
-
-/* Tighten title/date/description spacing */
-.episode-card .date {
-  font-size: 0.78rem;
-  color: var(--text-soft);
-  margin: 0 !important;                 /* hug the title */
-  padding-top: 0.05rem;
-  padding-bottom: 0.25rem;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
-  margin-bottom: 0.45rem !important;    /* small gap before description */
-}
-
-.episode-card .summary {
-  margin-top: 0.0rem !important;
-  margin-bottom: 0.45rem !important;
-}
-
-/* --------------------------------------------------
-   Hard overrides: hero + episode card layout
-   -------------------------------------------------- */
-
-/* Keep the hero cover small and centered */
-.hero-art {
-  width: 220px !important;
-  max-width: 100% !important;
-  height: auto !important;
-  display: block;
-  margin: 0 auto;
-  border-radius: 18px;
-}
-
-/* Make sure the main content stays centered with padding */
-.page-inner {
-  max-width: var(--max-width) !important;
-  margin: 0 auto !important;
-  padding: 1.5rem 1rem 3.5rem !important;
-}
-
-/* Vertical stack for text inside each episode card (no weird columns) */
-.episode-card h3,
-.episode-card .date,
-.episode-card .summary,
-.episode-card .listen {
-  display: block !important;
-}
-
-/* We already forced the list into a vertical stack; make sure that sticks */
-.episode-grid {
-  max-width: 900px;
-  margin: 0;
-  padding: 0;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 1rem;
-}
-
-.episode-card {
-  width: 100%;
-}
-
-/* Date tight under title, with a divider before description */
-.episode-card .date {
-  font-size: 0.78rem;
-  color: var(--text-soft);
-  margin: 0 !important;
-  padding-top: 0.05rem;
-  padding-bottom: 0.25rem;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
-  margin-bottom: 0.45rem !important;
-}
-
-.episode-card .summary {
-  margin-top: 0 !important;
-  margin-bottom: 0.45rem !important;
-}
-
-
