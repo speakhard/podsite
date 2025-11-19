@@ -69,6 +69,8 @@ p {
 
 .page-main {
   flex: 1 0 auto;
+  position: relative;
+  z-index: 0;
 }
 
 .page-inner {
@@ -92,11 +94,7 @@ p {
   top: 0;
   z-index: 40;
   backdrop-filter: blur(14px);
-  background: radial-gradient(
-    circle at top,
-    rgba(15, 23, 42, 0.96),
-    rgba(15, 23, 42, 0.96)
-  );
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.96));
   border-bottom: 1px solid rgba(15, 23, 42, 0.9);
 }
 
@@ -129,8 +127,7 @@ p {
   width: 28px;
   height: 28px;
   border-radius: 6px;
-  box-shadow:
-    0 0 0 1px rgba(15, 23, 42, 0.8),
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.8),
     0 8px 18px rgba(15, 23, 42, 0.8);
   flex-shrink: 0;
 }
@@ -159,6 +156,8 @@ p {
   display: grid;
   grid-template-columns: minmax(0, 220px) minmax(0, 1.4fr);
   gap: 1.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 .hero-left {
@@ -166,12 +165,19 @@ p {
   justify-content: center;
 }
 
+/* **FORCE** hero art to be a small card image, not fullscreen */
 .hero-art {
-  width: 220px;
-  max-width: 100%;
+  position: relative !important;
+  display: block;
+  width: 220px !important;
+  max-width: 220px !important;
+  height: auto !important;
+  max-height: 260px !important;
   border-radius: 18px;
   border: 1px solid rgba(15, 23, 42, 0.9);
   box-shadow: var(--shadow-soft);
+  object-fit: cover;
+  z-index: 0 !important;
 }
 
 .hero-right h1 {
@@ -206,11 +212,7 @@ p {
   font-size: 0.8rem;
   font-weight: 500;
   border: 1px solid rgba(148, 163, 184, 0.2);
-  background: radial-gradient(
-    circle at top left,
-    rgba(56, 189, 248, 0.14),
-    rgba(15, 23, 42, 0.98)
-  );
+  background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.14), rgba(15, 23, 42, 0.98));
   color: var(--text-main);
   text-decoration: none;
 }
@@ -224,8 +226,13 @@ p {
     grid-template-columns: minmax(0, 1fr);
     text-align: center;
   }
+
   .hero-left {
     order: -1;
+  }
+
+  .hero-art {
+    margin-bottom: 0.75rem;
   }
 }
 
@@ -242,7 +249,7 @@ p {
   margin: 0 0 1rem;
 }
 
-/* Stack cards vertically down the page */
+/* stacked horizontally, one card per row */
 .episode-grid {
   max-width: var(--max-width);
   display: flex;
@@ -250,19 +257,14 @@ p {
   gap: 1.1rem;
 }
 
-/* Force each card to be a horizontal flex row */
+/* horizontal card */
 .episode-card {
-  display: flex !important;
-  flex-direction: row !important;
+  display: flex;
   align-items: flex-start;
   gap: 1.25rem;
   padding: 1rem 1.25rem;
   border-radius: var(--card-radius);
-  background: radial-gradient(
-    circle at top left,
-    rgba(15, 23, 42, 0.98),
-    rgba(2, 6, 23, 0.98)
-  );
+  background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.98));
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-subtle);
   transition:
@@ -278,29 +280,28 @@ p {
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.85);
 }
 
-/* Left image/thumb: first img in the card */
-.episode-card > a:first-child,
-.episode-card > img:first-child {
-  flex-shrink: 0;
+/* Thumb: 240×240, left side */
+.ep-thumb-link {
   display: block;
+  flex-shrink: 0;
 }
 
-.episode-card > a:first-child img,
-.episode-card > img:first-child {
+.ep-thumb {
   width: 240px;
   height: 240px;
   border-radius: 16px;
+  display: block;
   object-fit: cover;
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.9);
 }
 
-/* Right-hand content (generic wrapper) */
-.episode-card > div {
-  flex: 1 1 auto;
+/* Right-hand content */
+.episode-card-body {
+  flex: 1;
   min-width: 0;
 }
 
-/* Title */
+/* Typography inside card */
 .episode-card h3 {
   margin: 0 0 0.15rem;
   font-size: 0.95rem;
@@ -316,18 +317,14 @@ p {
   text-decoration: underline;
 }
 
-/* Date: prefer .date or <time>, fall back to first small paragraph */
-.episode-card .date,
-.episode-card time {
-  display: block;
+/* date: tight to title */
+.episode-card .date {
   margin: 0 0 0.25rem;
   font-size: 0.78rem;
   color: var(--text-soft);
 }
 
-/* Summary:
-   - If .summary exists, use it.
-   - Otherwise, use the first paragraph after the date/title. */
+/* summary: line between date and description */
 .episode-card .summary {
   margin: 0.35rem 0 0.4rem;
   padding-top: 0.45rem;
@@ -341,36 +338,21 @@ p {
   -webkit-box-orient: vertical;
 }
 
-/* generic fallback: first paragraph after title/date */
-.episode-card h3 + p,
-.episode-card time + p {
-  margin: 0.35rem 0 0.4rem;
-  padding-top: 0.45rem;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  border-top: 1px solid var(--border-subtle);
-}
-
-/* Listen link: try .listen, otherwise any 'Listen to Episode' style link */
-.episode-card .listen,
-.episode-card a[href*="episode"],
-.episode-card a[href*="Episode"] {
+.episode-card .listen {
   display: inline-flex;
   align-items: center;
-  margin-top: 0.4rem;
   font-size: 0.8rem;
   color: var(--accent);
 }
 
-/* Mobile layout: stack vertically */
+/* Mobile layout: vertical stack */
 @media (max-width: 720px) {
   .episode-card {
-    flex-direction: column !important;
+    flex-direction: column;
     align-items: flex-start;
   }
 
-  .episode-card > a:first-child img,
-  .episode-card > img:first-child {
+  .ep-thumb {
     width: 100%;
     max-width: 280px;
     height: auto;

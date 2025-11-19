@@ -7,7 +7,7 @@
   {% if site.tagline %}
   <meta name="description" content="{{ site.tagline }}">
   {% endif %}
-  <link rel="stylesheet" href="/static/podsite.css">
+<link rel="stylesheet" href="/static/podsite.css?v=99">
   {{ site.analytics_head | safe }}
 </head>
 <body>
@@ -38,5 +38,56 @@
   <footer class="site-footer">
     <p>© {{ now().year }} {{ site.title }}</p>
   </footer>
+
+  <!-- Global JS -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var transcriptEl = document.getElementById('transcript');
+      var toggleBtn = document.getElementById('toggle-timecodes');
+      var audioEl = document.getElementById('episode-audio'); // only exists on episode pages
+
+      if (!transcriptEl || !toggleBtn) {
+        return; // nothing to do on pages without a transcript
+      }
+
+      var showing = false;
+
+      function updateButton() {
+        toggleBtn.textContent = showing ? 'Hide timestamps' : 'Show timestamps';
+        toggleBtn.setAttribute('aria-pressed', showing ? 'true' : 'false');
+        toggleBtn.setAttribute(
+          'aria-label',
+          showing ? 'Hide timestamps in transcript' : 'Show timestamps in transcript'
+        );
+      }
+
+      toggleBtn.addEventListener('click', function () {
+        showing = !showing;
+        transcriptEl.classList.toggle('show-timecodes', showing);
+        updateButton();
+      });
+
+      updateButton();
+
+      // Optional: clicking a timestamp seeks the audio player
+      if (audioEl) {
+        transcriptEl.addEventListener('click', function (event) {
+          var target = event.target;
+          if (!target.classList.contains('timecode')) return;
+
+          var seconds = parseFloat(target.getAttribute('data-seconds'));
+          if (!isNaN(seconds)) {
+            audioEl.currentTime = seconds;
+            var playPromise = audioEl.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+              playPromise.catch(function () {
+                // Autoplay might be blocked; ignore errors.
+              });
+            }
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
