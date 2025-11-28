@@ -30,13 +30,22 @@
         </audio>
       {% endif %}
 
-      {% if ep.transcript_url %}
-        <p class="episode-page-transcript-link">
-          <a href="{{ ep.transcript_url }}" target="_blank" rel="noopener">
-            View official transcript
-          </a>
-        </p>
-      {% endif %}
+{% if ep.transcript_html %}
+<div class="episode-page-section episode-page-transcript-collapsible">
+
+  <details>
+    <summary class="transcript-summary">
+      <h2>Transcript</h2>
+    </summary>
+
+    <div class="episode-page-transcript">
+      {{ ep.transcript_html | safe }}
+    </div>
+  </details>
+
+</div>
+{% endif %}
+
     </div>
   </header>
 
@@ -83,6 +92,25 @@
     </div>
     {% endif %}
 
+    {% if ep.mastodon_status_url %}
+<section class="episode-comments">
+  <h2>Comments</h2>
+
+  <p class="episode-comments-cta">
+    Discuss this episode on Mastodon:
+    <a href="{{ episode.mastodon_status_url }}" rel="nofollow noopener noreferrer" target="_blank">
+      Reply to this episode
+    </a>
+  </p>
+
+  <div id="mastodon-comments"
+       data-mastodon-status-url="{{ episode.mastodon_status_url }}">
+    <p>Loading comments from Mastodon…</p>
+  </div>
+</section>
+{% endif %}
+
+
     {% if ep.transcript_html %}
     <div class="episode-page-section">
       <h2>Transcript</h2>
@@ -94,4 +122,14 @@
   </section>
 </article>
 
+
+{% if ep.mastodon_status_url %}
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"
+          integrity=""
+          crossorigin="anonymous"></script>
+  <script src="/static/mastodon-comments.js"></script>
+{% endif %}
+
 {% endblock %}
+
+

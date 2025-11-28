@@ -203,11 +203,11 @@ def build_show(show: dict, out_root: Path):
 
     img_url = show.get("image") or img_url
 
-    images_dir = out_root / "images"
+    images_dir = os.path.join(out_root, "images")
     if img_url:
         saved = download_image(img_url, images_dir)
-        if saved:
-            site["image"] = f"/images/{saved}"
+        # path relative to the show's root (e.g., /last-best-hope/)
+        site["image"] = f"images/{saved}" if saved else ""
 
     # Analytics
     analytics = show.get("analytics", {}) or {}

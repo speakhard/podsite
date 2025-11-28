@@ -4,37 +4,52 @@
   <meta charset="utf-8">
   <title>{{ site.title }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   {% if site.tagline %}
   <meta name="description" content="{{ site.tagline }}">
   {% endif %}
+<<<<<<< Updated upstream
 <link rel="stylesheet" href="/static/podsite.css?v=99">
+=======
+
+  <link rel="stylesheet" href="static/podsite.css">
+>>>>>>> Stashed changes
   {{ site.analytics_head | safe }}
+  <!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-Lqox_PT_5-Q-dj0zPQ9lY.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
 </head>
 <body>
+
+  <!-- FULL-WIDTH NAV BAR -->
   <header class="site-header">
-    <div class="nav-inner">
-      <div class="nav-left">
-        {% if site.image %}
-          <img src="{{ site.image }}" alt="{{ site.title }}" class="nav-logo">
-        {% endif %}
-        <div class="nav-title">
-          <a href="/">{{ site.title }}</a>
-        </div>
+    <div class="site-header-inner">
+      <div class="brand">
+        <span class="brand-handle">#lastbesthopeb5</span>
       </div>
+
       <nav class="nav-links">
         <a href="/">Home</a>
         <a href="/#episodes">Episodes</a>
         <a href="/about/">About</a>
         <a href="/reviews/">Reviews</a>
-        <a href="/blog/">Blog</a>
       </nav>
     </div>
   </header>
 
-  <main class="site-main">
-    {% block content %}{% endblock %}
-  </main>
+  <!-- CENTERED CONTENT FRAME -->
+  <div class="layout-wrap">
+    <main class="page-wrap">
+      <div class="page-main">
+        <div class="page-inner">
+          {% block content %}{% endblock %}
+        </div>
+      </div>
 
+<<<<<<< Updated upstream
   <footer class="site-footer">
     <p>© {{ now().year }} {{ site.title }}</p>
   </footer>
@@ -89,5 +104,14 @@
       }
     });
   </script>
+=======
+      <footer class="site-footer">
+        <div class="site-footer-inner">
+          <p>© {{ now().year }} {{ site.title }}</p>
+        </div>
+      </footer>
+    </main>
+  </div>
+>>>>>>> Stashed changes
 </body>
 </html>

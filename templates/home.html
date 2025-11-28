@@ -1,25 +1,51 @@
 {% extends "base.html" %}
+
 {% block content %}
 
-<section class="hero">
-  <div class="hero-left">
-    {% if site.image %}
-      <img src="{{ site.image }}" alt="{{ site.title }}" class="hero-art">
-    {% endif %}
-  </div>
-  <div class="hero-right">
-    <h1>{{ site.hero_title or site.title }}</h1>
-    <p class="tagline">{{ site.hero_blurb or site.tagline }}</p>
-    <div class="subscribe-buttons">
-      {% for name, url in show.get("subscribe", {}).items() %}
-        <a href="{{ url }}" class="btn-subscribe">{{ name|capitalize }}</a>
-      {% endfor %}
+<section class="hero-banner">
+  <div class="hero-banner-inner">
+    <div class="hero-text-block">
+      <h1 class="hero-title">Last Best Hope</h1>
+      <p class="hero-subtitle">
+        An explicitly political <em>Babylon 5</em> podcast
+      </p>
+
+      <div class="subscribe-icons">
+        {% if site.apple_podcasts_url %}
+        <a
+          class="sub-icon sub-icon-apple"
+          href="{{ site.apple_podcasts_url }}"
+          aria-label="Listen on Apple Podcasts"
+          target="_blank"
+          rel="noopener"
+        ></a>
+        {% endif %}
+
+        {% if site.spotify_url %}
+        <a
+          class="sub-icon sub-icon-spotify"
+          href="{{ site.spotify_url }}"
+          aria-label="Listen on Spotify"
+          target="_blank"
+          rel="noopener"
+        ></a>
+        {% endif %}
+
+        {% if site.rss_url %}
+        <a
+          class="sub-icon sub-icon-rss"
+          href="{{ site.rss_url }}"
+          aria-label="Podcast RSS feed"
+        ></a>
+        {% endif %}
+      </div>
     </div>
   </div>
 </section>
 
 <section class="episodes" id="episodes">
   <h2>Recent Episodes</h2>
+<<<<<<< Updated upstream
 
   <div class="episode-grid">
     {% for ep in episodes %}
@@ -50,7 +76,55 @@
       </div>
 
     </article>
+=======
+
+  <div class="episode-grid">
+{% for episode in episodes[:6] %}
+  {% set ep_url = episode.permalink or episode.url %}
+  {% set image = episode.image_url or episode.image %}
+  {# OLD: summary or subtitle or description #}
+  {# {% set summary = episode.summary or episode.subtitle or episode.description %} #}
+
+  {# NEW: prefer subtitle, then summary, then description #}
+  {% set summary = episode.subtitle or episode.summary or episode.description %}
+
+      <article class="episode-card">
+        {% if image %}
+        <a class="ep-thumb-link" href="{{ ep_url }}">
+          <img src="{{ image }}" alt="{{ episode.title }}" class="ep-thumb">
+        </a>
+        {% endif %}
+
+        <div class="episode-info">
+          <p class="date">
+            {{ episode.published | date("%B %d, %Y") }}
+          </p>
+
+          <h3>
+            <a href="{{ ep_url }}">
+              {{ episode.title }}
+            </a>
+          </h3>
+
+          {% if summary %}
+          <p class="summary">
+            {{ summary | striptags }}
+          </p>
+          {% endif %}
+
+          <p class="listen">
+            <a href="{{ ep_url }}">▶ Listen to Episode</a>
+          </p>
+        </div>
+      </article>
+>>>>>>> Stashed changes
     {% endfor %}
+  </div>
+
+  <div class="episodes-footer">
+    <a class="btn-view-all" href="/episodes/">
+      View all episodes
+    </a>
   </div>
 </section>
 
